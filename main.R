@@ -8,13 +8,13 @@ ctx = tercenCtx()
 
 data.all<-ctx$select(unlist(list(".y",".ci",".ri",ctx$colors,ctx$labels)))
 
-data.all<-data.all[c(0:10000),]
+#data.all<-data.all[c(0:10000),]
 
 data <- data.all[0:3] %>% 
   pivot_wider(id_cols=".ci",names_from= ".ri", values_from =".y")
 
 colnames(data) <- c(".ri",ctx$rselect()[[1]])
-marker<-colnames(data)
+markers<-colnames(data)
 
 uncorrected.all<-merge(x=data,y=data.all[,3:ncol(data.all)],by = ".ri")
 
