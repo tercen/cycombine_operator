@@ -1,9 +1,9 @@
 {
-  "name": "Template_R_operator",
+  "name": "cycombine_operator",
   "description": "Calculate the mathematical average of the data points in a cell.",
   "tags": ["basic statistics"],
   "authors": ["tercen"],
-  "urls": ["https://github.com/tercen/template_R_operator"],
+  "urls": ["https://github.com/tercen/cycombine_operator"],
   "properties": []
 }
 
