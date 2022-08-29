@@ -5,38 +5,42 @@ library(magrittr)
 library(tidyverse)
 
 options("tercen.workflowId" = "9b27ac887a201c952cd90da2e300e645")
-#options("tercen.stepId"     = "005df533-f268-4780-a0a7-076e46d9c66d")
 options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
 
 ctx <- tercenCtx()
 
-data.all<-ctx$select(unlist(list(".y",".ci",".ri",ctx$colors,ctx$labels)))
-#data.all<-data.all[c(0:10000),]
+seed <- NULL
+if(!is.null(ctx$op.value("seed"))) seed <- as.integer(ctx$op.value("seed"))
+
+data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
+
+colnames(data.all)[ncol(data.all)]<-"condition"
+colnames(data.all)[ncol(data.all)-1]<-"batch"
+
 data <- data.all[0:3] %>% 
   pivot_wider(id_cols=".ci",names_from= ".ri", values_from =".y")
 
-colnames(data) <- c(".ci",ctx$rselect()[[1]])
+
 markers<-ctx$rselect()[[1]]
+colnames(data) <- c(".ci",markers)
 
-uncorrected.all<-dplyr::full_join(x=data,y=data.all[,2:ncol(data.all)],by = ".ci")
+uncorrected.all<-dplyr::full_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
+#uncorrected.left<-dplyr::left_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
 
-#uncorrected.all<-merge(x=data,y=data.all[,3:ncol(data.all)],by = ".ri")
+#colnames(uncorrected.all)[grep(pattern = "atch",x = colnames(uncorrected.all))]<-"batch"
+#colnames(uncorrected.all)[grep(pattern = "ondition",x = colnames(uncorrected.all))]<-"condition"
 
-colnames(uncorrected.all)[grep(pattern = "atch",x = colnames(uncorrected.all))]<-"batch"
-colnames(uncorrected.all)[grep(pattern = "ondition",x = colnames(uncorrected.all))]<-"condition"
-
-#uncorrected.all<-uncorrected.all %>% drop_na(batch)
-uncorrected.all<-uncorrected.all %>% drop_na()
-
-uncorrected<-select(uncorrected.all, -.ri)
+uncorrected<-uncorrected.all %>% drop_na()
 uncorrected %<>% mutate(batch = as.integer(batch))
+
 # Run batch correction
 labels.ori <- uncorrected %>%
   normalize(markers = markers,
-            norm_method = "rank")  #scale or rank
+            norm_method = "scale")  #scale or rank
 
 labels<-labels.ori %>%
   create_som(markers = markers,
+             seed = seed,
              rlen = 10,#Higher values are recommended if 10 does not appear to perform well
              xdim = 8,
              ydim = 8) 
@@ -48,6 +52,16 @@ corrected <- uncorrected %>%
                covar = "condition",
                parametric = TRUE)
 
-corrected%>%
+corrected.short<-select(corrected, -c(id,batch, condition))
+
+corrected.long <-corrected.short %>%
+  select(-label)%>%
+pivot_longer(!.ci, names_to = "variable",values_to = "value")
+
+output <- corrected.long %>% 
+   left_join(cbind(unique(data.all[".ri"]),markers),  
+             by = c("variable" = "markers"))
+
+output %>%
 ctx$addNamespace() %>%
   ctx$save()
