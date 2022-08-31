@@ -9,11 +9,11 @@ options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
 
 ctx <- tercenCtx()
 
-seed <- NULL
-if(!is.null(ctx$op.value("seed"))) seed <- as.integer(ctx$op.value("seed"))
+seed <- ctx$op.value("seed", as.integer, NULL)
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
 
+### rename the colors and labels colomns to names require by cycombine
 colnames(data.all)[ncol(data.all)]<-"condition"
 colnames(data.all)[ncol(data.all)-1]<-"batch"
 
@@ -60,7 +60,8 @@ pivot_longer(!.ci, names_to = "variable",values_to = "value")
 
 output <- corrected.long %>% 
    left_join(cbind(unique(data.all[".ri"]),markers),  
-             by = c("variable" = "markers"))
+             by = c("variable" = "markers")) #%>%
+  #select(-variable)
 
 output %>%
 ctx$addNamespace() %>%

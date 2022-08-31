@@ -6,8 +6,7 @@ library(tidyverse)
 
 ctx <- tercenCtx()
 
-seed <- NULL
-if(!is.null(ctx$op.value("seed"))) seed <- as.integer(ctx$op.value("seed"))
+seed <- ctx$op.value("seed", as.integer, NULL)
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
 data <- data.all[0:3] %>% 

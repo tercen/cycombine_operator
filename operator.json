@@ -4,7 +4,14 @@
   "tags": ["basic statistics"],
   "authors": ["tercen"],
   "urls": ["https://github.com/tercen/cycombine_operator"],
-  "properties": []
+  "properties": [
+    {
+    "kind": "DoubleProperty",
+    "name": "seed",
+    "defaultValue": NULL,
+    "description": "Seed for random number generation."
+  }
+  ]
 }
 
 
