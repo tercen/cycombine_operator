@@ -9,6 +9,11 @@ ctx <- tercenCtx()
 seed <- ctx$op.value("seed", as.integer, NULL)
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
+
+### rename the colors and labels colomns to names require by cycombine
+colnames(data.all)[ncol(data.all)]<-"condition"
+colnames(data.all)[ncol(data.all)-1]<-"batch"
+
 data <- data.all[0:3] %>% 
   pivot_wider(id_cols=".ci",names_from= ".ri", values_from =".y")
 
@@ -17,9 +22,6 @@ markers<-ctx$rselect()[[1]]
 colnames(data) <- c(".ci",markers)
 
 uncorrected.all<-dplyr::full_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
-
-colnames(uncorrected.all)[grep(pattern = "atch",x = colnames(uncorrected.all))]<-"batch"
-colnames(uncorrected.all)[grep(pattern = "ondition",x = colnames(uncorrected.all))]<-"condition"
 
 uncorrected<-uncorrected.all %>% drop_na()
 uncorrected %<>% mutate(batch = as.integer(batch))
@@ -45,13 +47,13 @@ corrected <- uncorrected %>%
 
 corrected.short<-select(corrected, -c(id,batch, condition))
 
-corrected.short.long <-corrected.short %>%
+corrected.long <-corrected.short %>%
   select(-label)%>%
   pivot_longer(!.ci, names_to = "variable",values_to = "value")
 
-output <- corrected.short.long %>% 
+output <- corrected.long %>% 
   left_join(cbind(unique(data.all[".ri"]),markers),  
-            by = c("variable" = "markers"))
+            by = c("variable" = "markers")) 
 
 output %>%
   ctx$addNamespace() %>%
