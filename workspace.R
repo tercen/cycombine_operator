@@ -10,6 +10,7 @@ options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
 ctx <- tercenCtx()
 
 seed <- ctx$op.value("seed", as.integer, NULL)
+norm_method <- ctx$op.value("norm_method", as.character, "scale")
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
 
@@ -25,10 +26,6 @@ markers<-ctx$rselect()[[1]]
 colnames(data) <- c(".ci",markers)
 
 uncorrected.all<-dplyr::full_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
-#uncorrected.left<-dplyr::left_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
-
-#colnames(uncorrected.all)[grep(pattern = "atch",x = colnames(uncorrected.all))]<-"batch"
-#colnames(uncorrected.all)[grep(pattern = "ondition",x = colnames(uncorrected.all))]<-"condition"
 
 uncorrected<-uncorrected.all %>% drop_na()
 uncorrected %<>% mutate(batch = as.integer(batch))
@@ -36,12 +33,12 @@ uncorrected %<>% mutate(batch = as.integer(batch))
 # Run batch correction
 labels.ori <- uncorrected %>%
   normalize(markers = markers,
-            norm_method = "scale")  #scale or rank
+            norm_method = norm_method)
 
 labels<-labels.ori %>%
   create_som(markers = markers,
              seed = seed,
-             rlen = 10,#Higher values are recommended if 10 does not appear to perform well
+             rlen = 10, #Higher values are recommended if 10 does not appear to perform well
              xdim = 8,
              ydim = 8) 
 
@@ -60,8 +57,7 @@ pivot_longer(!.ci, names_to = "variable",values_to = "value")
 
 output <- corrected.long %>% 
    left_join(cbind(unique(data.all[".ri"]),markers),  
-             by = c("variable" = "markers")) #%>%
-  #select(-variable)
+             by = c("variable" = "markers"))
 
 output %>%
 ctx$addNamespace() %>%

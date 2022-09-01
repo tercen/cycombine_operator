@@ -10,6 +10,17 @@
     "name": "seed",
     "defaultValue": "NULL",
     "description": "Seed for random number generation."
+  },
+  {
+    "kind": "EnumeratedProperty",
+    "name": "norm_method",
+    "defaultValue": "scale",
+    "values": [
+      "scale",
+      "rank",
+      "qnorm"
+    ],
+    "description": "Standardization method used within each batch. (default= scale)"
   }
   ]
 }

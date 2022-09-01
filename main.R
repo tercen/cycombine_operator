@@ -7,6 +7,7 @@ library(tidyverse)
 ctx <- tercenCtx()
 
 seed <- ctx$op.value("seed", as.integer, NULL)
+norm_method <- ctx$op.value("norm_method", as.character, "scale")
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
 
@@ -29,7 +30,7 @@ uncorrected %<>% mutate(batch = as.integer(batch))
 # Run batch correction
 labels.ori <- uncorrected %>%
   normalize(markers = markers,
-            norm_method = "scale")  #scale or rank
+            norm_method = norm_method)
 
 labels<-labels.ori %>%
   create_som(markers = markers,
