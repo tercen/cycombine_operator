@@ -8,7 +8,7 @@
     {
     "kind": "StringProperty",
     "name": "seed",
-    "defaultValue": "NULL",
+    "defaultValue": -1,
     "description": "Seed for random number generation."
   },
   {

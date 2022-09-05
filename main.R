@@ -6,7 +6,9 @@ library(tidyverse)
 
 ctx <- tercenCtx()
 
-seed <- ctx$op.value("seed", as.integer, NULL)
+seed <- NULL
+if(!ctx$op.value('seed') < 0) seed <- as.integer(ctx$op.value('seed'))
+
 norm_method <- ctx$op.value("norm_method", as.character, "scale")
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
@@ -54,8 +56,9 @@ corrected.long <-corrected.short %>%
 
 output <- corrected.long %>% 
   left_join(cbind(unique(data.all[".ri"]),markers),  
-            by = c("variable" = "markers")) 
+            by = c("variable" = "markers"))%>%
+  select(-variable)%>%
+  ctx$addNamespace()
 
 output %>%
-  ctx$addNamespace() %>%
   ctx$save()
