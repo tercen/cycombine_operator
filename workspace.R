@@ -5,11 +5,15 @@ library(magrittr)
 library(tidyverse)
 
 options("tercen.workflowId" = "9b27ac887a201c952cd90da2e300e645")
-options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
+#options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
+options("tercen.stepId"     = "375c1569-1186-47a6-9588-6d7f4555ea45")
 
 ctx <- tercenCtx()
 
-seed <- ctx$op.value("seed", as.integer, NULL)
+seed <- NULL
+if(!ctx$op.value('seed') < 0) seed <- as.integer(ctx$op.value('seed'))
+seed <- 42
+
 norm_method <- ctx$op.value("norm_method", as.character, "scale")
 
 data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
@@ -57,8 +61,11 @@ pivot_longer(!.ci, names_to = "variable",values_to = "value")
 
 output <- corrected.long %>% 
    left_join(cbind(unique(data.all[".ri"]),markers),  
-             by = c("variable" = "markers"))
+             by = c("variable" = "markers"))%>%
+  select(-variable)%>%
+  ctx$addNamespace()
 
-output %>%
-ctx$addNamespace() %>%
+output  %>%
   ctx$save()
+
+tim::build_test_data(res_table = output, ctx = ctx, test_name = "test1")
