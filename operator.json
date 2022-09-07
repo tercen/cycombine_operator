@@ -6,7 +6,7 @@
   "urls": ["https://github.com/tercen/cycombine_operator"],
   "properties": [
     {
-    "kind": "StringProperty",
+    "kind": "DoubleProperty",
     "name": "seed",
     "defaultValue": -1,
     "description": "Seed for random number generation."
