@@ -1,50 +1,35 @@
-# Template R operator
-
-The `Template R operator` is a template repository for the creation of R operators in Tercen. An overview of steps for developing an operator are:
-
-1. create a github repo
-2. install tercen_studio
-3. login to tercen_studio
-4. git clone the newly created repo
-5. start developing in R in tercen_studio
-6. add R packages to the repo
-7. push to the github repo
-8. go to tercen and install the operator
-
-More information can be found in [Tercen developer's guide](https://tercen.github.io/developers_guide/).
-
-Below is the operator README standard structure:
+# Cycombine operator
 
 ##### Description
 
-The `Template R operator` is a template repository for the creation of R operators in Tercen.
+The `Cycombine operator` is a package for combining single-cell cytometry datasets, which increases the analytical flexibility and the statistical power of the analyses while minimizing technical noise.
 
 ##### Usage
 
 Input projection|.
 ---|---
-`x-axis`        | type, description 
-`y-axis`        | type, description 
-`row`           | type, description 
-`column`        | type, description 
-`colors`        | type, description 
-`labels`        | type, description 
+`y-axis`        | The value of measurement signal of the channel/marker
+`row`           | Represents the variables (e.g. channels, markers)
+`column`        | rowID
+`colors`        | Batch
+`labels`        | Condition
 
 Input parameters|.
 ---|---
-`input_var`        | parameter description
+`seed`        | Seed for random number generation. (if less than 0, set a Random seed)
+`norm_method`        | Standardization method used within each batch. (default= scale)
 
 Output relations|.
 ---|---
-`output_var`        | output relation
-`Operator view`        | view of the Shiny application
+`output_var`        | The corrected value
 
 ##### Details
 
-Details on the computation.
+CyCombine offert a method to robustly integrate cytometry data from different batches, experiments, or even different experimental techniques.
+It reduce technical variance between datasets using the [ComBat](https://www.rdocumentation.org/packages/sva/versions/3.20.0/topics/ComBat) package. 
 
 ##### See Also
 
-[template_shiny_operator](https://github.com/tercen/template_shiny_operator)
-, [template_docker_operator](https://github.com/tercen/template_docker_operator)
+[cyCombine_Nature_article](https://www.nature.com/articles/s41467-022-29383-5)
+, [cyCombine_manual](https://biosurf.org/cyCombine_ref_manual.html)
 
