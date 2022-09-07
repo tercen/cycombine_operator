@@ -10,9 +10,9 @@ Input projection|.
 ---|---
 `y-axis`        | The value of measurement signal of the channel/marker
 `row`           | Represents the variables (e.g. channels, markers)
-`column`        | rowID
+`column`        | Observations (rowID)
 `colors`        | Batch
-`labels`        | Condition
+`labels`        | Condition (optional)
 
 Input parameters|.
 ---|---
@@ -21,7 +21,7 @@ Input parameters|.
 
 Output relations|.
 ---|---
-`output_var`        | The corrected value
+`value`        | The corrected value
 
 ##### Details
 
