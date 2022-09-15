@@ -12,7 +12,7 @@ Input projection|.
 `row`           | Represents the variables (e.g. channels, markers)
 `column`        | Observations (rowID)
 `colors`        | Batch
-`labels`        | Condition (optional)
+`labels`        | Condition
 
 Input parameters|.
 ---|---
