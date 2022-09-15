@@ -32,7 +32,7 @@ colnames(data) <- c(".ci",markers)
 uncorrected.all<-dplyr::full_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
 
 uncorrected<-uncorrected.all %>% drop_na()
-uncorrected %<>% mutate(batch = as.integer(batch))
+#uncorrected %<>% mutate(batch = as.integer(batch))
 
 # Run batch correction
 labels.ori <- uncorrected %>%
