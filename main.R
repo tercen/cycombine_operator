@@ -47,6 +47,16 @@ corrected <- uncorrected %>%
                anchor = NULL,
                covar = "condition",
                parametric = TRUE)
+## ADD SCORES (EMD and MAD)
+# MAD score quantifies the information ‘loss’, the ideal tool has a small MAD score.
+uncorrected$label <- labels
+uncorrected$id <- uncorrected$.ci+1
+# Evaluate EMD
+emd <- evaluate_emd(uncorrected, corrected, cell_col = "label", plots = FALSE)
+mad <- evaluate_mad(uncorrected, corrected, cell_col = "label")
+
+corrected$emd_reduction <- emd$reduction
+corrected$mad_score <- mad$score
 
 corrected.short<-select(corrected, -c(id,batch, condition))
 
