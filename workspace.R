@@ -3,6 +3,7 @@ library(dplyr, warn.conflicts = FALSE)
 library(cyCombine)
 library(magrittr)
 library(tidyverse)
+library(emdist)
 
 options("tercen.workflowId" = "9b27ac887a201c952cd90da2e300e645")
 #options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
@@ -46,8 +47,8 @@ labels<-labels.ori %>%
              xdim = 8,
              ydim = 8) 
 
-corrected <- uncorrected %>%
-  suppressMessages({correct_data(label = labels,
+corrected <-suppressMessages({uncorrected %>%
+correct_data(label = labels,
                markers = markers,
                anchor = NULL,
                covar = "condition",

@@ -41,12 +41,12 @@ labels<-labels.ori %>%
              xdim = 8,
              ydim = 8) 
 
-corrected <- uncorrected %>%
-  suppressMessages({correct_data(label = labels,
-                                 markers = markers,
-                                 anchor = NULL,
-                                 covar = "condition",
-                                 parametric = TRUE)}) 
+corrected <-suppressMessages({uncorrected %>%
+    correct_data(label = labels,
+                 markers = markers,
+                 anchor = NULL,
+                 covar = "condition",
+                 parametric = TRUE)}) 
 ## ADD SCORES (EMD and MAD)
 # MAD score quantifies the information ‘loss’, the ideal tool has a small MAD score.
 uncorrected$label <- labels
