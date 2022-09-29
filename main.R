@@ -1,8 +1,10 @@
-library(tercen)
-library(dplyr, warn.conflicts = FALSE)
-library(cyCombine)
-library(magrittr)
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(tercen)
+  library(dplyr, warn.conflicts = FALSE)
+  library(cyCombine)
+  library(magrittr)
+  library(tidyverse)
+})
 
 ctx <- tercenCtx()
 
