@@ -6,7 +6,7 @@ library(tidyverse)
 
 options("tercen.workflowId" = "9b27ac887a201c952cd90da2e300e645")
 #options("tercen.stepId"     = "cd1c0072-588a-4311-99a0-78a526a8c95e")
-options("tercen.stepId"     = "375c1569-1186-47a6-9588-6d7f4555ea45")
+options("tercen.stepId"     = "ceb2ce3e-16cb-487b-a888-ffe4026db902")
 
 ctx <- tercenCtx()
 
@@ -42,7 +42,7 @@ labels.ori <- uncorrected %>%
 labels<-labels.ori %>%
   create_som(markers = markers,
              seed = seed,
-             rlen = 10, #Higher values are recommended if 10 does not appear to perform well
+             rlen = 10,#Higher values are recommended if 10 does not appear to perform well
              xdim = 8,
              ydim = 8) 
 
@@ -52,23 +52,14 @@ corrected <- uncorrected %>%
                anchor = NULL,
                covar = "condition",
                parametric = TRUE)
-
+## ADD SCORES (EMD and MAD)
+# MAD score quantifies the information ‘loss’, the ideal tool has a small MAD score.
 uncorrected$label <- labels
 uncorrected$id <- uncorrected$.ci+1
 # Evaluate EMD
 emd <- evaluate_emd(uncorrected, corrected, cell_col = "label", plots = FALSE)
-
-# Reduction
-emd$reduction
-# Violin plot
-#emd$violin
-# Scatter plot
-#emd$scatter
-# Evaluate MAD
 mad <- evaluate_mad(uncorrected, corrected, cell_col = "label")
-# Score
-mad$score
-#MAD score quantifies the information ‘loss’, the ideal tool has a small MAD score.
+
 corrected$emd_reduction <- emd$reduction
 corrected$mad_score <- mad$score
 
@@ -76,15 +67,15 @@ corrected.short<-select(corrected, -c(id,batch, condition))
 
 corrected.long <-corrected.short %>%
   select(-label)%>%
-pivot_longer(!.ci, names_to = "variable",values_to = "value")
+  pivot_longer(!c(.ci,emd_reduction,mad_score), names_to = "variable",values_to = "value")
 
 output <- corrected.long %>% 
-   left_join(cbind(unique(data.all[".ri"]),markers),  
-             by = c("variable" = "markers"))%>%
+  left_join(cbind(unique(data.all[".ri"]),markers),  
+            by = c("variable" = "markers"))%>%
   select(-variable)%>%
   ctx$addNamespace()
 
-output  %>%
+output %>%
   ctx$save()
 
-tim::build_test_data(res_table = output, ctx = ctx, test_name = "test1")
+tim::build_test_data(res_table = output, ctx = ctx, test_name = "test1",relTol = 1e-05)

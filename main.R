@@ -62,7 +62,7 @@ corrected.short<-select(corrected, -c(id,batch, condition))
 
 corrected.long <-corrected.short %>%
   select(-label)%>%
-  pivot_longer(!.ci, names_to = "variable",values_to = "value")
+  pivot_longer(!c(.ci,emd_reduction,mad_score), names_to = "variable",values_to = "value")
 
 output <- corrected.long %>% 
   left_join(cbind(unique(data.all[".ri"]),markers),  
