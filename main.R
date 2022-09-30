@@ -1,9 +1,12 @@
 suppressPackageStartupMessages({
   library(tercen)
+  library(plyr)
   library(dplyr, warn.conflicts = FALSE)
   library(cyCombine)
+  library(emdist)
   library(magrittr)
   library(tidyverse)
+  library(tim)
 })
 
 ctx <- tercenCtx()
