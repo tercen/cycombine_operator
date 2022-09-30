@@ -1,6 +1,5 @@
 suppressPackageStartupMessages({
   library(tercen)
-  library(plyr)
   library(dplyr, warn.conflicts = FALSE)
   library(cyCombine)
   library(emdist)
