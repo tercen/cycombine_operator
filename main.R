@@ -5,7 +5,6 @@ suppressPackageStartupMessages({
   library(emdist)
   library(magrittr)
   library(tidyverse)
-  library(tim)
 })
 
 ctx <- tercenCtx()
