@@ -22,6 +22,8 @@ Input parameters|.
 Output relations|.
 ---|---
 `value`        | The corrected value
+`emd_reduction`| Emd
+`mad_score` | Mad
 
 ##### Details
 
