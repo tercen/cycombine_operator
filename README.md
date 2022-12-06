@@ -1,8 +1,8 @@
-# Cycombine operator
+# cyCombine operator
 
 ##### Description
 
-The `Cycombine operator` is a package for combining single-cell cytometry datasets, which increases the analytical flexibility and the statistical power of the analyses while minimizing technical noise.
+The `cyCombine operator` is a package for combining single-cell cytometry datasets, which increases the analytical flexibility and the statistical power of the analyses while minimizing technical noise.
 
 ##### Usage
 
@@ -11,23 +11,21 @@ Input projection|.
 `y-axis`        | The value of measurement signal of the channel/marker
 `row`           | Represents the variables (e.g. channels, markers)
 `column`        | Observations (rowID)
-`colors`        | Batch
-`labels`        | Condition
+`colors`        | Condition (optional)
+`labels`        | Batch
 
 Input parameters|.
 ---|---
 `seed`        | Seed for random number generation. (if less than 0, set a Random seed)
-`norm_method`        | Standardization method used within each batch. (default= scale)
+`norm_method` | Standardization method used within each batch. (default= scale)
 
 Output relations|.
 ---|---
 `value`        | The corrected value
-`emd_reduction`| Emd
-`mad_score` | Mad
 
 ##### Details
 
-CyCombine offert a method to robustly integrate cytometry data from different batches, experiments, or even different experimental techniques.
+CyCombine offers a method to robustly integrate cytometry data from different batches, experiments, or even different experimental techniques.
 It reduce technical variance between datasets using the [ComBat](https://www.rdocumentation.org/packages/sva/versions/3.20.0/topics/ComBat) package. 
 
 ##### See Also

@@ -1,7 +1,7 @@
 {
-  "name": "cycombine_operator",
-  "description": "Adjust for batch effects using ComBat package.",
-  "tags": ["flow cytometry"],
+  "name": "cyCombine",
+  "description": "Batch effect correction of flow cytometry data.",
+  "tags": ["flow cytometry", "batch correction", "normalisation"],
   "authors": ["tercen"],
   "urls": ["https://github.com/tercen/cycombine_operator"],
   "properties": [
@@ -20,7 +20,7 @@
       "rank",
       "qnorm"
     ],
-    "description": "Standardization method used within each batch. (default= scale)"
+    "description": "Standardisation method used within each batch (default: scale)."
   }
   ]
 }

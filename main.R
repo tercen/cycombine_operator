@@ -2,76 +2,64 @@ suppressPackageStartupMessages({
   library(tercen)
   library(dplyr, warn.conflicts = FALSE)
   library(cyCombine)
-  library(emdist)
   library(magrittr)
-  library(tidyverse)
+  library(tidyr)
 })
 
 ctx <- tercenCtx()
 
-seed <- NULL
-if(!ctx$op.value('seed') < 0) seed <- as.integer(ctx$op.value('seed'))
+seed <- ctx$op.value('seed', as.integer, -1)
+if(seed < 0) seed <- NULL
 
 norm_method <- ctx$op.value("norm_method", as.character, "scale")
 
-data.all<-ctx$select(unlist(list(".y",".ri",".ci",ctx$colors,ctx$labels)))
+data.all <- ctx$select(unlist(list(".y", ".ri", ".ci", ctx$colors, ctx$labels)))
 
-### rename the colors and labels colomns to names require by cycombine
-colnames(data.all)[ncol(data.all)]<-"condition"
-colnames(data.all)[ncol(data.all)-1]<-"batch"
+condition_column <- unlist(ctx$colors)
+batch_column <- unlist(ctx$labels)
 
-data <- data.all[0:3] %>% 
-  pivot_wider(id_cols=".ci",names_from= ".ri", values_from =".y")
+stopifnot("Labels must contains one factor (batch)" = length(batch_column) == 1)
+stopifnot("A single condition factor must be provided as a color." = length(condition_column) < 2)
 
+rnames <- ctx$rselect() %>%
+  mutate(.ri = seq_len(nrow(.)) - 1L)
 
-markers<-ctx$rselect()[[1]]
-colnames(data) <- c(".ci",markers)
-
-uncorrected.all<-dplyr::full_join(x=data,y=unique(data.all[,3:ncol(data.all)]),by = ".ci")
-
-uncorrected<-uncorrected.all %>% drop_na()
-#uncorrected %<>% mutate(batch = as.integer(batch))
+data <- data.all %>%
+  rename(batch = all_of(batch_column), condition = all_of(condition_column)) %>%
+  left_join(rnames, by = ".ri") %>%
+  pivot_wider(
+    id_cols = matches(".ci|batch|condition"),
+    names_from = ctx$rnames[[1]],
+    values_from =".y"
+  ) %>%
+  drop_na()
 
 # Run batch correction
-labels.ori <- uncorrected %>%
-  normalize(markers = markers,
-            norm_method = norm_method)
+labels <- data %>%
+  normalize(markers = rnames[[1]], norm_method = norm_method) %>%
+  create_som(
+    markers = rnames[[1]],
+    seed = seed,
+    rlen = 10,
+    xdim = 8,
+    ydim = 8
+  ) 
 
-labels<-labels.ori %>%
-  create_som(markers = markers,
-             seed = seed,
-             rlen = 10,#Higher values are recommended if 10 does not appear to perform well
-             xdim = 8,
-             ydim = 8) 
+corrected <- suppressMessages({
+  data %>%
+    correct_data(
+      label = labels,
+      markers = rnames[[1]],
+      anchor = NULL,
+      covar = condition_column,
+      parametric = TRUE
+    )
+})
 
-corrected <-suppressMessages({uncorrected %>%
-    correct_data(label = labels,
-                 markers = markers,
-                 anchor = NULL,
-                 covar = "condition",
-                 parametric = TRUE)}) 
-## ADD SCORES (EMD and MAD)
-# MAD score quantifies the information ‘loss’, the ideal tool has a small MAD score.
-uncorrected$label <- labels
-uncorrected$id <- uncorrected$.ci+1
-# Evaluate EMD
-emd <- evaluate_emd(uncorrected, corrected, cell_col = "label", plots = FALSE)
-mad <- evaluate_mad(uncorrected, corrected, cell_col = "label")
-
-corrected$emd_reduction <- emd$reduction
-corrected$mad_score <- mad$score
-
-corrected.short<-select(corrected, -c(id,batch, condition))
-
-corrected.long <-corrected.short %>%
-  select(-label)%>%
-  pivot_longer(!c(.ci,emd_reduction,mad_score), names_to = "variable",values_to = "value")
-
-output <- corrected.long %>% 
-  left_join(cbind(unique(data.all[".ri"]),markers),  
-            by = c("variable" = "markers"))%>%
-  select(-variable)%>%
-  ctx$addNamespace()
-
-output %>%
+corrected %>%
+  select(!matches("id|batch|condition|label")) %>%
+  pivot_longer(!.ci, names_to = "variable", values_to = "value") %>%
+  left_join(rnames, by = c("variable" = ctx$rnames[[1]])) %>%
+  select(-variable) %>%
+  ctx$addNamespace() %>%
   ctx$save()
