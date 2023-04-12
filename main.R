@@ -51,7 +51,7 @@ corrected <- suppressMessages({
       label = labels,
       markers = rnames[[1]],
       anchor = NULL,
-      covar = condition_column,
+      covar = ifelse(!is.null(condition_column), "condition", NULL),
       parametric = TRUE
     )
 })
