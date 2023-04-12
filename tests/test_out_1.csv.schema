@@ -1,0 +1,20 @@
+{
+  "kind": "TableSchema",
+  "columns": [
+    {
+      "kind": "ColumnSchema",
+      "name": ".ci",
+      "type": "int32"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds3.value",
+      "type": "double"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": ".ri",
+      "type": "int32"
+    }
+  ]
+}

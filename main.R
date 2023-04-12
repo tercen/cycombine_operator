@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
 
 ctx <- tercenCtx()
 
-seed <- ctx$op.value('seed', as.integer, -1)
+seed <- ctx$op.value('seed', as.integer, 42)
 if(seed < 0) seed <- NULL
 
 norm_method <- ctx$op.value("norm_method", as.character, "scale")
@@ -62,7 +62,7 @@ corrected <- suppressMessages({
     )
 })
 
-corrected %>%
+df_out <- corrected %>%
   select(!matches("id|batch|condition|label")) %>%
   pivot_longer(!.ci, names_to = "variable", values_to = "value") %>%
   left_join(rnames, by = c("variable" = ctx$rnames[[1]])) %>%

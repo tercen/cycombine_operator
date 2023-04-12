@@ -14,7 +14,14 @@
   ],
   "yAxis": "y_values",
   "xAxis": "",
-  "generatedOn": "04/12/2023 09:27:51 AM 2023",
+  "generatedOn": "04/12/2023 09:32:01 AM 2023",
   "version": "",
+  "propertyValues": [
+    {
+      "kind": "PropertyValue",
+      "name": "seed",
+      "value": "42"
+    }
+  ],
   "absTol": 1e-05
 }
