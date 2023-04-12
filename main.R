@@ -45,13 +45,19 @@ labels <- data %>%
     ydim = 8
   ) 
 
+if(is.null(condition_column)) {
+  covar <- NULL
+} else {
+  covar <- "condition"
+}
+
 corrected <- suppressMessages({
   data %>%
     correct_data(
       label = labels,
       markers = rnames[[1]],
       anchor = NULL,
-      covar = ifelse(!is.null(condition_column), "condition", NULL),
+      covar = covar,
       parametric = TRUE
     )
 })
