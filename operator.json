@@ -1,28 +1,34 @@
 {
   "name": "cyCombine",
   "description": "Batch effect correction of flow cytometry data.",
-  "tags": ["flow cytometry", "batch correction", "normalisation"],
-  "authors": ["tercen"],
-  "urls": ["https://github.com/tercen/cycombine_operator"],
+  "tags": [
+    "flow cytometry",
+    "preprocessing",
+    "normalisation"
+  ],
+  "authors": [
+    "tercen"
+  ],
+  "urls": [
+    "https://github.com/tercen/cycombine_operator"
+  ],
   "properties": [
     {
-    "kind": "DoubleProperty",
-    "name": "seed",
-    "defaultValue": -1,
-    "description": "Seed for random number generation."
-  },
-  {
-    "kind": "EnumeratedProperty",
-    "name": "norm_method",
-    "defaultValue": "scale",
-    "values": [
-      "scale",
-      "rank",
-      "qnorm"
-    ],
-    "description": "Standardisation method used within each batch (default: scale)."
-  }
+      "kind": "DoubleProperty",
+      "name": "seed",
+      "defaultValue": -1,
+      "description": "Seed for random number generation."
+    },
+    {
+      "kind": "EnumeratedProperty",
+      "name": "norm_method",
+      "defaultValue": "scale",
+      "values": [
+        "scale",
+        "rank",
+        "qnorm"
+      ],
+      "description": "Standardisation method used within each batch (default: scale)."
+    }
   ]
 }
-
-
