@@ -1,6 +1,6 @@
 {
   "name": "cyCombine",
-  "description": "Batch effect correction of flow cytometry data.",
+  "description": "Performs batch correction of flow cytometry data.",
   "tags": [
     "flow cytometry",
     "preprocessing",
