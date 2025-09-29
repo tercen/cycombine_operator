@@ -30,5 +30,74 @@
       ],
       "description": "Standardisation method used within each batch (default: scale)."
     }
-  ]
+  ],
+  "operatorSpec": {
+    "kind": "OperatorSpec",
+    "inputSpecs": [
+      {
+        "kind": "CrosstabSpec",
+        "metaFactors": [
+          {
+            "kind": "MetaFactor",
+            "name": "Channel",
+            "type": "",
+            "description": "The channel identifiers",
+            "ontologyMapping": "variable",
+            "crosstabMapping": "column",
+            "cardinality": "1..n",
+            "factors": []
+          },
+          {
+            "kind": "MetaFactor",
+            "name": "Events",
+            "type": "",
+            "description": "Observation identifiers (event ID)",
+            "ontologyMapping": "observation",
+            "crosstabMapping": "row",
+            "cardinality": "1..n",
+            "factors": []
+          }
+        ],
+        "axis": [
+          {
+            "kind": "AxisSpec",
+            "metaFactors": [
+              {
+                "kind": "MetaFactor",
+                "name": "Y Axis",
+                "type": "numeric",
+                "description": "Factor to use for the graph's Y axis.",
+                "crosstabMapping": "y",
+                "cardinality": "1"
+              },
+              {
+                "kind": "MetaFactor",
+                "name": "label",
+                "type": "",
+                "description": "Factor to use as batch.",
+                "crosstabMapping": "label",
+                "cardinality": "1"
+              },
+              {
+                "kind": "MetaFactor",
+                "name": "covar",
+                "type": "",
+                "description": "Factor(s) to use as covariates.",
+                "crosstabMapping": "label",
+                "cardinality": "0..1"
+              },
+              {
+                "kind": "MetaFactor",
+                "name": "anchor",
+                "type": "",
+                "description": "Factor(s) to use as anchors.",
+                "crosstabMapping": "label",
+                "cardinality": "0..1"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
