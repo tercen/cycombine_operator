@@ -12,7 +12,7 @@
   "urls": [
     "https://github.com/tercen/cycombine_operator"
   ],
-  "container": "ghcr.io/tercen/cycombine_operator:latest",
+  "container": "ghcr.io/tercen/cycombine_operator:master",
   "properties": [
     {
       "kind": "DoubleProperty",
