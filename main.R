@@ -11,30 +11,49 @@ ctx <- tercenCtx()
 # operator specs
 specs <- ctx$query$operatorSettings$operatorRef$operatorSpec
 
-if(length(specs$inputSpecs)) {
+# default to NULL
+label_factor_names <- NULL
+covar_factor_names <- NULL
+anchor_factor_names <- NULL
+
+# try getting factors from specs
+if(!is.null(specs$inputSpecs) && length(specs$inputSpecs) > 0) {
   metafactors <- specs$inputSpecs[[1]]$metaFactors
-  spec_names <- lapply(metafactors, "[[", "name")
+  spec_names <- unlist(lapply(metafactors, "[[", "name"))
   
-  label_factors <- lapply(metafactors[grepl("label", unlist(spec_names))], "[[", "factors")[[1]]
-  covar_factors <- lapply(metafactors[grepl("covar", unlist(spec_names))], "[[", "factors")[[1]]
-  anchor_factors <- lapply(metafactors[grepl("anchor", unlist(spec_names))], "[[", "factors")[[1]]
+  if(any(grepl("label", spec_names))) {
+    label_factors_list <- lapply(metafactors[grepl("label", spec_names)], "[[", "factors")
+    if(length(label_factors_list) > 0 && length(label_factors_list[[1]]) > 0) {
+      label_factor_names <- lapply(label_factors_list[[1]], "[[", "name") %>% unlist()
+    }
+  }
   
-} else {
-  metafactors <- NULL
-  spec_names <- NULL
-  label_factors <- NULL
-  covar_factors <- NULL
-  anchor_factors <- NULL
+  if(any(grepl("covar", spec_names))) {
+    covar_factors_list <- lapply(metafactors[grepl("covar", spec_names)], "[[", "factors")
+    if(length(covar_factors_list) > 0 && length(covar_factors_list[[1]]) > 0) {
+      covar_factor_names <- lapply(covar_factors_list[[1]], "[[", "name") %>% unlist()
+    }
+  }
+  
+  if(any(grepl("anchor", spec_names))) {
+    anchor_factors_list <- lapply(metafactors[grepl("anchor", spec_names)], "[[", "factors")
+    if(length(anchor_factors_list) > 0 && length(anchor_factors_list[[1]]) > 0) {
+      anchor_factor_names <- lapply(anchor_factors_list[[1]], "[[", "name") %>% unlist()
+    }
+  }
 }
 
-has_label <- length(label_factors)
-if(has_label) label_factor_names <- lapply(label_factors, "[[", "name") %>% unlist()
+# backward compatibility: if not defined in specs, get from labels and colors
+if(is.null(label_factor_names)) {
+  label_factor_names <- unlist(ctx$labels)
+}
+if(is.null(covar_factor_names)) {
+  covar_factor_names <- unlist(ctx$colors)
+}
 
-has_covar <- length(covar_factors)
-if(has_covar) covar_factor_names <- lapply(covar_factors, "[[", "name") %>% unlist()
-
-has_anchor <- length(anchor_factors)
-if(has_anchor) anchor_factor_names <- lapply(anchor_factors, "[[", "name") %>% unlist()
+has_label <- !is.null(label_factor_names) && length(label_factor_names) > 0
+has_covar <- !is.null(covar_factor_names) && length(covar_factor_names) > 0
+has_anchor <- !is.null(anchor_factor_names) && length(anchor_factor_names) > 0
 
 
 seed <- ctx$op.value('seed', as.integer, 42)
