@@ -9,10 +9,9 @@ The `cyCombine operator` is a package for combining single-cell cytometry datase
 Input projection|.
 ---|---
 `y-axis`        | The value of measurement signal of the channel/marker
-`row`           | Represents the variables (e.g. channels, markers)
-`column`        | Observations (rowID)
-`colors`        | Condition (optional)
-`labels`        | Batch
+`row`           | Observations (event ID)
+`column`        | Represents the variables (e.g. channels, markers)
+`labels`        | Batch identifier (required); additional labels for covariates and anchors
 
 Input parameters|.
 ---|---
