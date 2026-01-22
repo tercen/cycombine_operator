@@ -34,6 +34,8 @@
   ],
   "operatorSpec": {
     "kind": "OperatorSpec",
+    "ontologyUri": "https://tercen.com/_ontology/tercen",
+    "ontologyVersion": "1.0.0",
     "inputSpecs": [
       {
         "kind": "CrosstabSpec",
@@ -69,7 +71,8 @@
                 "type": "numeric",
                 "description": "Factor to use for the graph's Y axis.",
                 "crosstabMapping": "y",
-                "cardinality": "1"
+                "cardinality": "1",
+                "ontologyMapping": "measurement"
               },
               {
                 "kind": "MetaFactor",
@@ -77,7 +80,8 @@
                 "type": "",
                 "description": "Factor to use as batch.",
                 "crosstabMapping": "label",
-                "cardinality": "1"
+                "cardinality": "1",
+                "ontologyMapping": "pairing"
               },
               {
                 "kind": "MetaFactor",
@@ -85,7 +89,8 @@
                 "type": "",
                 "description": "Factor(s) to use as covariates.",
                 "crosstabMapping": "label",
-                "cardinality": "0..1"
+                "cardinality": "0..1",
+                "ontologyMapping": "pairing"
               },
               {
                 "kind": "MetaFactor",
@@ -93,7 +98,8 @@
                 "type": "",
                 "description": "Factor(s) to use as anchors.",
                 "crosstabMapping": "label",
-                "cardinality": "0..1"
+                "cardinality": "0..1",
+                "ontologyMapping": "pairing"
               }
             ]
           }
