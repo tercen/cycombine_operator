@@ -68,7 +68,7 @@
               {
                 "kind": "MetaFactor",
                 "name": "Y Axis",
-                "type": "numeric",
+                "type": "double",
                 "description": "Factor to use for the graph's Y axis.",
                 "crosstabMapping": "y",
                 "cardinality": "1",
